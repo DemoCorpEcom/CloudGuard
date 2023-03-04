@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer
+spec:
+  selector:
+    matchLabels:
+      app: producer
+  template:
+    metadata:
+      labels:
+        app: producer
+    spec:
+      containers:
+      - name: producer
+        image: umjoshua/producer
+        resources:
+          limits:
+            memory: "300Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
