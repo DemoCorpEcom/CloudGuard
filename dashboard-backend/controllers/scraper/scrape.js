@@ -21,7 +21,7 @@ const scraper = async (req, res) => {
     res.status(200).json(links);
 
     try {
-      const connection = await amqp.connect('amqp://localhost');
+      const connection = await amqp.connect('amqp://localhost:5672');
       const channel = await connection.createChannel();
 
       await channel.assertQueue(process.env.QUEUE_NAME, { durable: false });
