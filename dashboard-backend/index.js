@@ -1,15 +1,11 @@
 import express from "express";
-import publishMessage from './rabbit/publisher.js'
+import ScrapRouter from './routes/Scrap.js';
 
 const app = express();
+app.use(ScrapRouter);
 
-const router = express.Router();
-
-app.use(router)
-
-router.get('/',(req,res)=>{
-    res.status(200).send('Hi');
-})
+router.get('/api/scrap',
+)
 
 router.get('/insert',(req,res)=>{
     publishMessage('hello','testmessage')
