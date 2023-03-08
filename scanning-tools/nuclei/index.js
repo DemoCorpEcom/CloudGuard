@@ -1,6 +1,5 @@
 import { exec } from 'child_process';
 import * as amqp from 'amqplib';
-import { setTimeout } from 'timers/promises';
 
 const executeCommand = (command) => {
     return new Promise((resolve, reject) => {
@@ -14,13 +13,6 @@ const executeCommand = (command) => {
     });
 }
 
-// executeCommand('ls -la').then(({ stdout, stderr }) => {
-//     console.log(`stdout: ${stdout}`);
-// }).catch((error) => {
-//     console.error(`exec error: ${error}`);
-// });
-
-
 const fetchLink = async () => {
     const connection = await amqp.connect("amqp://localhost");
     const channel = await connection.createChannel();
@@ -29,18 +21,21 @@ const fetchLink = async () => {
 
     await channel.assertQueue(queueName, { durable: false });
 
-    channel.consume(queueName, (link) => {
-        console.log(link.content.toString());
+    while(true) {
+        const message = await channel.get(queueName, {noAck: true});
+        if (message !== false) {
+            console.log(message.content.toString());
 
-        const command = `/home/joshua/go/bin/nuclei -u "${link.content.toString()}" -t sqli-template.yaml -json`;
-        console.log(command);
+            const command = `python3 /home/joshua/Documents/wait.py ${message.content.toString()}`;
 
-        executeCommand(command).then(({ stdout, stderr }) => {
-            console.log(`stdout: ${stdout}`);
-        }).catch((error) => {
-            console.error(`exec error: ${error}`);
-        });
-    }, { noAck: true });
+            await executeCommand(command).then(({ stdout, stderr }) => {
+                console.log(`stdout: ${stdout}`);
+            }).catch((error) => {
+                console.error(`exec error: ${error}`);
+            });
+        }
+    };
+    
 }
 
 fetchLink();
