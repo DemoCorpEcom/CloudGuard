@@ -3,6 +3,6 @@ import scraper from "../controllers/scraper/scrape.js";
 
 const router = express.Router();
 
-router.get('/',scraper);
+router.post('/',scraper);
 
 export default router;

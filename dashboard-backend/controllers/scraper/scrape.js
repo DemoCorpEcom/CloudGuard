@@ -4,7 +4,9 @@ import url from 'url';
 import * as amqp from 'amqplib';
 
 const scraper = async (req, res) => {
-  const baseUrl = req?.body?.baseUrl || "http://localhost/dcp/";
+  const { baseUrl, commitId } = req.body;
+
+  console.log(req.body);
 
   request(baseUrl, async (err, response, body) => {
 
@@ -29,7 +31,7 @@ const scraper = async (req, res) => {
       await channel.assertQueue(queueName, { durable: false });
 
       for (const item of links) {
-        channel.sendToQueue(queueName, Buffer.from(item));
+        channel.sendToQueue(queueName, Buffer.from(JSON.stringify([item, commitId])));
       }
 
     } catch (error) {

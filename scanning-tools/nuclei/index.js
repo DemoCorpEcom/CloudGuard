@@ -21,21 +21,21 @@ const fetchLink = async () => {
 
     await channel.assertQueue(queueName, { durable: false });
 
-    while(true) {
-        const message = await channel.get(queueName, {noAck: true});
+    while (true) {
+        const message = await channel.get(queueName, { noAck: true });
         if (message !== false) {
-            console.log(message.content.toString());
+            console.log(JSON.parse(message.content));
 
-            const command = `python3 /home/joshua/Documents/wait.py ${message.content.toString()}`;
+            // const command = `python3 /home/joshua/Documents/wait.py ${message.content.toString()}`;
 
-            await executeCommand(command).then(({ stdout, stderr }) => {
-                console.log(`stdout: ${stdout}`);
-            }).catch((error) => {
-                console.error(`exec error: ${error}`);
-            });
+            // await executeCommand(command).then(({ stdout, stderr }) => {
+            //     console.log(`stdout: ${stdout}`);
+            // }).catch((error) => {
+            //     console.error(`exec error: ${error}`);
+            // });
         }
     };
-    
+
 }
 
 fetchLink();
