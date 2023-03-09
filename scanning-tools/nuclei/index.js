@@ -1,5 +1,8 @@
 import { exec } from 'child_process';
 import * as amqp from 'amqplib';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const executeCommand = (command) => {
     return new Promise((resolve, reject) => {
