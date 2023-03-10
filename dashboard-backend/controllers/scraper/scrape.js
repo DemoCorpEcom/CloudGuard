@@ -25,13 +25,20 @@ const scraper = async (req, res) => {
     try {
       const connection = await amqp.connect('amqp://localhost');
       const channel = await connection.createChannel();
-      // const queueName = process.env.QUEUE_NAME;
-      const queueName = "links";
 
-      await channel.assertQueue(queueName, { durable: false });
+      const exchangeName = 'links';
+
+      await channel.assertExchange(exchangeName, 'direct', { durable: false });
+
+      await channel.assertQueue('nuclei', { durable: false });
+      await channel.assertQueue('xsstrike', { durable: false });
+
+      await channel.bindQueue('nuclei',exchangeName,'nuclei');
+      await channel.bindQueue('xsstrike',exchangeName,'xsstrike');
 
       for (const item of links) {
-        channel.sendToQueue(queueName, Buffer.from(JSON.stringify([item, commitId])));
+        channel.publish(exchangeName,'nuclei',Buffer.from(JSON.stringify({link: item, commitId: commitId})));
+        channel.publish(exchangeName,'xsstrike',Buffer.from(JSON.stringify([item, commitId])));
       }
 
     } catch (error) {
