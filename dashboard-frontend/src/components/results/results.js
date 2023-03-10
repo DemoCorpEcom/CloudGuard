@@ -1,14 +1,41 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import './results.css';
+import axios from 'axios';
 
 const Results = () => {
 
-    const Result = () => {
+    function groupBy(objectArray, property) {
+        return objectArray.reduce((acc, obj) => {
+            const key = obj[property];
+            if (!acc[key]) {
+                acc[key] = [];
+            }
+            acc[key].push(obj);
+            return acc;
+        }, {});
+    }
+
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const results = await axios.get("http://localhost:5000/api/results");
+            const groupedData = groupBy(results.data, 'commitId');
+            setData(groupedData);
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        console.log(data);
+    }, [data]);
+
+    const Result = ({ item }) => {
         return (
             <table>
                 <thead>
                     <tr>
-                        <th className="second">Commit: </th>
+                        <th className="second">Commit: {item.commitId}</th>
                     </tr>
                     <tr className="head">
                         <th className="second">Vulnerability</th>
@@ -19,14 +46,9 @@ const Results = () => {
 
                 <tbody>
                     <tr>
-                        <td className="second">Error based SQL Injection</td>
-                        <td className="third">www.google.com</td>
-                        <td className="fourth">High</td>
-                    </tr>
-                    <tr>
-                        <td className="second">XSS</td>
-                        <td className="third">www.google.com</td>
-                        <td className="fourth">High</td>
+                        <td className="second">{item.vulnerability}</td>
+                        <td className="third">{item.affectedUrl}</td>
+                        <td className="fourth">{item.severity}</td>
                     </tr>
 
                 </tbody>
@@ -37,8 +59,37 @@ const Results = () => {
 
     return (
         <div className="w-full">
-            <Result />
-            <Result />
+            {data &&
+                Object.keys(data).map((commitId) => {
+                    return (
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th className="second">Commit: {commitId}</th>
+                                </tr>
+                                <tr className="head">
+                                    <th className="second">Vulnerability</th>
+                                    <th className="third">Affected URL</th>
+                                    <th className="fourth">Severity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    data[commitId].map((item) => {
+                                        return (
+                                            <tr>
+                                                <td className="second">{item.vulnerability}</td>
+                                                <td className="third">{item.affectedUrl}</td>
+                                                <td className="fourth">{item.severity}</td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                        </table>
+                    );
+                })
+            }
         </div>
     )
 }
