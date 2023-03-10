@@ -7,6 +7,6 @@ const resultSchema = mongoose.Schema({
     severity: String,
 })
 
-const ResultModel = mongoose.model(resultSchema, "ResultModel");
+const ScanResults = mongoose.model("scanresults", resultSchema);
 
-export default ResultModel;
+export default ScanResults;
