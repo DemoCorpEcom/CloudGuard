@@ -17,22 +17,23 @@ const executeCommand = (command) => {
 }
 
 const fetchLink = async () => {
-    const connection = await amqp.connect("amqp://localhost");
+    const connection = await amqp.connect("amqp://172.16.2.181");
     const channel = await connection.createChannel();
+    const template = "./sqli-template.yaml";
     // const queueName = process.env.QUEUE_NAME;
-    const queueName = "links";
+    const queueName = "nuclei";
 
     await channel.assertQueue(queueName, { durable: false });
 
     while (true) {
         const message = await channel.get(queueName, { noAck: true });
         if (message !== false) {
-            console.log(JSON.parse(message.content));
             
-            const command = `python3 /home/joshua/Documents/wait.py ${message.content.toString()}`;
-
+            const msg = JSON.parse(message.content);
+            const command = `~/Downloads/nuclei -u ${msg.link} -t ${template} -json`;
+            
             await executeCommand(command).then(({ stdout, stderr }) => {
-                console.log(`stdout: ${stdout}`);
+                console.log(`stdout: ${JSON.parse(stdout)}`);
             }).catch((error) => {
                 console.error(`exec error: ${error}`);
             });
