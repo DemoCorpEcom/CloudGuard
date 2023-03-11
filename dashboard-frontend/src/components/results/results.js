@@ -26,70 +26,48 @@ const Results = () => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        console.log(data);
-    }, [data]);
-
-    const Result = ({ item }) => {
-        return (
-            <table>
-                <thead>
-                    <tr>
-                        <th className="second">Commit: {item.commitId}</th>
-                    </tr>
-                    <tr className="head">
-                        <th className="second">Vulnerability</th>
-                        <th className="third">Affected URL</th>
-                        <th className="fourth">Severity</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr>
-                        <td className="second">{item.vulnerability}</td>
-                        <td className="third">{item.affectedUrl}</td>
-                        <td className="fourth">{item.severity}</td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-        )
-    }
-
     return (
-        <div className="w-full">
-            {data &&
-                Object.keys(data).map((commitId) => {
-                    return (
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th className="second">Commit: {commitId}</th>
-                                </tr>
-                                <tr className="head">
-                                    <th className="second">Vulnerability</th>
-                                    <th className="third">Affected URL</th>
-                                    <th className="fourth">Severity</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    data[commitId].map((item) => {
-                                        return (
-                                            <tr>
-                                                <td className="second">{item.vulnerability}</td>
-                                                <td className="third">{item.affectedUrl}</td>
-                                                <td className="fourth">{item.severity}</td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </table>
-                    );
-                })
-            }
+        <div className="flex items-center justify-center mainDiv">
+            <div className="w-[65%] flex flex-row">
+                <div className="flex-1">
+                    {data &&
+                        Object.keys(data).map((commitId) => {
+                            return (
+                                <table className="bg-white rounded">
+                                    <thead>
+                                        <tr>
+                                            <th className="second">Commit: {commitId}</th>
+                                        </tr>
+                                        <tr className="head">
+                                            <th className="second">Vulnerability</th>
+                                            <th className="third">Affected URL</th>
+                                            <th className="fourth">Severity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            data[commitId].map((item) => {
+                                                const severity = item.severity;
+                                                return (
+                                                    <tr>
+                                                        <td className="second text-red-600">{item.vulnerability}</td>
+                                                        <td className="third">{item.affectedUrl}</td>
+                                                        <td className={
+                                                            severity === "high" ? "fourth text-white bg-red-500 text-center rounded" : null}
+                                                        >
+                                                            {severity}
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            );
+                        })
+                    }
+                </div>
+            </div>
         </div>
     )
 }
