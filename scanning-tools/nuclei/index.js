@@ -54,7 +54,8 @@ const fetchLink = async () => {
                         "vulnerability": result.name,
                         "affectedUrl": link,
                         "severity": result.severity,
-                        "commitId": commitId
+                        "commitId": commitId,
+                        "vulId": 1
                     };
                     storeResult(output);
                 }
