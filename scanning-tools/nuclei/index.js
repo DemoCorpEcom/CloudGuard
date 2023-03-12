@@ -2,17 +2,10 @@ import { exec } from 'child_process';
 import * as amqp from 'amqplib';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import ScanResults from './models/results.js';
+import axios from 'axios';
 
 dotenv.config();
 
-const CONNECTION_URL = process.env.MONGODB_URL;
-
-mongoose.connect(CONNECTION_URL).then(() => {
-    console.log('Connected to MongoDB');
-}).catch((err) => {
-    console.log('Connection failed!', err);
-})
 
 const executeCommand = (command) => {
     return new Promise((resolve, reject) => {
@@ -27,8 +20,7 @@ const executeCommand = (command) => {
 }
 
 const storeResult = async (item) => {
-    const newitem = ScanResults(item);
-    await newitem.save();
+    await axios.post("http://localhost:5000/api/results", item);
 }
 
 const fetchLink = async () => {
@@ -43,9 +35,8 @@ const fetchLink = async () => {
     while (true) {
         const message = await channel.get(queueName, { noAck: true });
         if (message !== false) {
-
             const { link, commitId } = JSON.parse(message.content);
-            const command = `~/Downloads/nuclei -u ${link} -t ${template} -json`;
+            const command = `~/Downloads/nuclei -u ${link} -t ${template} -silent -json`;
 
             await executeCommand(command).then(async ({ stdout, stderr }) => {
                 if (stdout) {
