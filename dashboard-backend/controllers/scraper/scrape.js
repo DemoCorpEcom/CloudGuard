@@ -29,13 +29,16 @@ const scraper = async (req, res) => {
 
       await channel.assertQueue('nuclei', { durable: false });
       await channel.assertQueue('xsstrike', { durable: false });
+      await channel.assertQueue('openredirect', { durable: false });
 
       await channel.bindQueue('nuclei', exchangeName, 'nuclei');
       await channel.bindQueue('xsstrike', exchangeName, 'xsstrike');
+      await channel.bindQueue('openredirect', exchangeName, 'xsstrike');
 
       for (const item of links) {
         channel.publish(exchangeName, 'nuclei', Buffer.from(JSON.stringify({ link: item, commitId: commitId })));
         channel.publish(exchangeName, 'xsstrike', Buffer.from(JSON.stringify({ link: item, commitId: commitId })));
+        channel.publish(exchangeName, 'openredirect', Buffer.from(JSON.stringify({ link: item, commitId: commitId })));
       }
 
     } catch (error) {
