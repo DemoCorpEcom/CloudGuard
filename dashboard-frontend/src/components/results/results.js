@@ -4,27 +4,79 @@ import axios from 'axios';
 
 const Results = () => {
 
-    function groupBy(objectArray, property) {
-        return objectArray.reduce((acc, obj) => {
-            const key = obj[property];
-            if (!acc[key]) {
-                acc[key] = [];
-            }
-            acc[key].push(obj);
-            return acc;
-        }, {});
+    const [data, setData] = useState({
+        "54467b00418b3e7e4271710f119fa5c7fc1ad866": {
+            "1": [
+                {
+                    "_id": "640c80bebd02cd923cd3ca6d",
+                    "commitId": "54467b00418b3e7e4271710f119fa5c7fc1ad866",
+                    "vulnerability": "Error based SQL injection",
+                    "vulId": 1,
+                    "affectedUrl": "http://192.168.1.7/dcp/product.php?id=1",
+                    "severity": "high",
+                    "__v": 0
+                },
+                {
+                    "_id": "640c80bebd02cd923cd3ca6f",
+                    "commitId": "54467b00418b3e7e4271710f119fa5c7fc1ad866",
+                    "vulnerability": "Error based SQL injection",
+                    "vulId": 1,
+                    "affectedUrl": "http://192.168.1.7/dcp//product.php?id=2",
+                    "severity": "high",
+                    "__v": 0
+                },
+                {
+                    "_id": "640c80bebd02cd923cd3ca71",
+                    "commitId": "54467b00418b3e7e4271710f119fa5c7fc1ad866",
+                    "vulnerability": "Error based SQL injection",
+                    "vulId": 1,
+                    "affectedUrl": "http://192.168.1.7/dcp/product.php?id=3",
+                    "severity": "high",
+                    "__v": 0
+                }
+            ],
+            "2": [
+                {
+                    "_id": "640c80d5efaa9cc432f364c4",
+                    "commitId": "54467b00418b3e7e4271710f119fa5c7fc1ad866",
+                    "vulnerability": "XSS",
+                    "vulId": 2,
+                    "affectedUrl": "http://192.168.1.7/dcp//product.php?id=2",
+                    "severity": "high",
+                    "__v": 0
+                }
+            ]
+        },
+        "54467b00418b3e7e4271710f119fa5c7fc1ad867": {
+            "1": [
+                {
+                    "_id": "640cba35c2f31ba11a7f4d5d",
+                    "commitId": "54467b00418b3e7e4271710f119fa5c7fc1ad867",
+                    "vulnerability": "Error based SQL injection",
+                    "vulId": 1,
+                    "affectedUrl": "http://192.168.1.7/dcp/product.php?id=3",
+                    "severity": "high",
+                    "__v": 0
+                }
+            ]
+        }
+    });
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const results = await axios.get("http://localhost:5000/api/results");
+    //         setData(results.data);
+    //     };
+    //     fetchData();
+    // }, []);
+
+    // useEffect(() => {
+    //     console.log(data);
+    // }, [data])
+
+    const viewPopup = ()=>{
+        window.alert('hi');
     }
-
-    const [data, setData] = useState([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const results = await axios.get("http://localhost:5000/api/results");
-            const groupedData = groupBy(results.data, 'commitId');
-            setData(groupedData);
-        };
-        fetchData();
-    }, []);
 
     return (
         <div className="flex items-center justify-center mainDiv">
@@ -40,18 +92,22 @@ const Results = () => {
                                         </tr>
                                         <tr className="head">
                                             <th className="second">Vulnerability</th>
-                                            <th className="third">Affected URL</th>
+                                            <th className="third">Affected URLs</th>
                                             <th className="fourth">Severity</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {
-                                            data[commitId].map((item) => {
-                                                const severity = item.severity;
+                                            Object.keys(data[commitId]).map((item) => {
+
+                                                const it = data[commitId][item];
+                                                console.log(data[commitId][item])
+                                                const severity = it[0].severity;
+
                                                 return (
                                                     <tr>
-                                                        <td className="second text-red-600">{item.vulnerability}</td>
-                                                        <td className="third">{item.affectedUrl}</td>
+                                                        <td className="second text-red-600">{it[0].vulnerability}</td>
+                                                        <td className="third"><button onClick={viewPopup}>View</button></td>
                                                         <td className={
                                                             severity === "high" ? "fourth text-white bg-red-500 text-center rounded" : null}
                                                         >

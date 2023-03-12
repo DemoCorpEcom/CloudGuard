@@ -10,8 +10,7 @@ thead {
   border-radius: 10px;
   /* background-color: #f3f3f3; */
   background: rgb(2, 0, 36);
-  background: rgb(2, 0, 36);
-  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(142, 142, 255, 1) 0%, rgba(131, 217, 131, 1) 0%, rgba(253, 254, 255, 1) 0%, rgba(145, 221, 145, 1) 0%, rgba(241, 249, 255, 1) 100%, rgba(75, 175, 255, 1) 100%, rgba(0, 212, 255, 1) 100%);
+  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(142, 142, 255, 1) 0%, rgba(253, 254, 255, 1) 0%, rgba(30, 233, 212, 1) 0%, rgba(138, 226, 138, 1) 54%, rgba(241, 249, 255, 1) 100%, rgba(75, 175, 255, 1) 100%, rgba(0, 212, 255, 1) 100%);
 }
 
 thead>tr {
