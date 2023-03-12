@@ -5,7 +5,6 @@ import axios from 'axios';
 
 dotenv.config();
 
-
 const executeCommand = (command) => {
     return new Promise((resolve, reject) => {
         exec(command, (error, stdout, stderr) => {
@@ -27,7 +26,7 @@ const fetchLink = async () => {
     const channel = await connection.createChannel();
     const template = "./sqli-template.yaml";
     // const queueName = process.env.QUEUE_NAME;
-    const queueName = "nuclei";
+    const queueName = "xsstrike";
 
     await channel.assertQueue(queueName, { durable: false });
 
@@ -35,19 +34,21 @@ const fetchLink = async () => {
         const message = await channel.get(queueName, { noAck: true });
         if (message !== false) {
             const { link, commitId } = JSON.parse(message.content);
-            const command = `~/Downloads/nuclei -u ${link} -t ${template} -silent -json`;
+            const command = `python3 ~/Downloads/XSStrike/xsstrike.py -u ${link} --skip-dom`;
 
             await executeCommand(command).then(async ({ stdout, stderr }) => {
                 if (stdout) {
-                    const result = JSON.parse(stdout).info;
-                    const output = {
-                        "vulnerability": result.name,
-                        "affectedUrl": link,
-                        "severity": result.severity,
-                        "commitId": commitId,
-                        "vulId": 1
-                    };
-                    storeResult(output);
+                    if (stdout.includes("Payload:")) {
+                        const output = {
+                            "vulnerability": "Cross-site Scripting",
+                            "affectedUrl": link,
+                            "severity": "medium",
+                            "commitId": commitId,
+                            "vulId": 2
+                        };
+                        storeResult(output);
+                    }
+
                 }
             }).catch((error) => {
                 console.error(`exec error: ${error}`);
