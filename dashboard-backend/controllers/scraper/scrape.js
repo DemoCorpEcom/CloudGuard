@@ -14,8 +14,14 @@ const scraper = async (req, res) => {
     }
 
     const $ = cheerio.load(body);
+    
     const links = $('a').map((i, elem) => {
       const href = $(elem).attr('href');
+      return url.resolve(baseUrl, href);
+    }).get();
+    
+    const images = $('img').map((i, elem) => {
+      const href = $(elem).attr('src');
       return url.resolve(baseUrl, href);
     }).get();
 
@@ -38,6 +44,9 @@ const scraper = async (req, res) => {
       for (const item of links) {
         channel.publish(exchangeName, 'nuclei', Buffer.from(JSON.stringify({ link: item, commitId: commitId })));
         channel.publish(exchangeName, 'xsstrike', Buffer.from(JSON.stringify({ link: item, commitId: commitId })));
+        channel.publish(exchangeName, 'openredirect', Buffer.from(JSON.stringify({ link: item, commitId: commitId })));
+      }
+      for (const item of images) {
         channel.publish(exchangeName, 'openredirect', Buffer.from(JSON.stringify({ link: item, commitId: commitId })));
       }
 

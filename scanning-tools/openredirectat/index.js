@@ -42,7 +42,7 @@ const fetchLink = async () => {
                         const output = {
                             "vulnerability": "Open redirect",
                             "affectedUrl": link,
-                            "severity": "medium",
+                            "severity": "low",
                             "commitId": commitId,
                             "vulId": 3
                         };
