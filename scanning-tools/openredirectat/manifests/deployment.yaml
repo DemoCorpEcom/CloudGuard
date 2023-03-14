@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openredirectat
+spec:
+  selector:
+    matchLabels:
+      app: openredirectat
+  template:
+    metadata:
+      labels:
+        app: openredirectat
+    spec:
+      containers:
+      - name: openredirectat
+        image: umjoshua/openredirectat
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"

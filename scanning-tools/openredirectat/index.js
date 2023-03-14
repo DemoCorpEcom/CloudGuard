@@ -18,13 +18,12 @@ const executeCommand = (command) => {
 }
 
 const storeResult = async (item) => {
-    await axios.post("http://localhost:5000/api/results", item);
+    await axios.post("http://backend-service:5000/api/results", item);
 }
 
 const fetchLink = async () => {
-    const connection = await amqp.connect("amqp://localhost");
+    const connection = await amqp.connect("amqp://rabbitmq");
     const channel = await connection.createChannel();
-    const template = "./sqli-template.yaml";
     // const queueName = process.env.QUEUE_NAME;
     const queueName = "openredirect";
 
@@ -34,7 +33,7 @@ const fetchLink = async () => {
         const message = await channel.get(queueName, { noAck: true });
         if (message !== false) {
             const { link, commitId } = JSON.parse(message.content);
-            const command = `go run ~/Documents/OpenRedirectAt/main.go ${link}`;
+            const command = `go run /OpenRedirectAt/main.go ${link}`;
 
             await executeCommand(command).then(async ({ stdout, stderr }) => {
                 if (stdout) {

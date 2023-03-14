@@ -1,22 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dashb-backend
+  name: nuclei-sqli
 spec:
   selector:
     matchLabels:
-      app: dashb-backend
+      app: nuclei-sqli
   template:
     metadata:
       labels:
-        app: dashb-backend
+        app: nuclei-sqli
     spec:
       containers:
-      - name: dashb-backend
-        image: umjoshua/backend
+      - name: nuclei-sqli
+        image: umjoshua/nuclei-sqli
         resources:
           limits:
-            memory: "300Mi"
+            memory: "200Mi"
             cpu: "500m"
-        ports:
-        - containerPort: 5000
