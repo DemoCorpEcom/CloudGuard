@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xsstrike
+spec:
+  selector:
+    matchLabels:
+      app: xsstrike
+  template:
+    metadata:
+      labels:
+        app: xsstrike
+    spec:
+      containers:
+      - name: xsstrike
+        image: umjoshua/xsstrike
+        resources:
+          limits:
+            memory: "200Mi"
+            cpu: "500m"

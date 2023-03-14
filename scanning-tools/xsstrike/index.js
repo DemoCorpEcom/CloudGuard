@@ -24,7 +24,6 @@ const storeResult = async (item) => {
 const fetchLink = async () => {
     const connection = await amqp.connect("amqp://rabbitmq");
     const channel = await connection.createChannel();
-    const template = "./sqli-template.yaml";
     // const queueName = process.env.QUEUE_NAME;
     const queueName = "xsstrike";
 

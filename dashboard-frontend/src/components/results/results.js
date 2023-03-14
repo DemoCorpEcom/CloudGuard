@@ -13,7 +13,7 @@ const Results = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const results = await axios.get("http://localhost:5000/api/results");
+            const results = await axios.get("http://192.168.49.2:30003/api/results");
             setData(results.data);
         };
         fetchData();
