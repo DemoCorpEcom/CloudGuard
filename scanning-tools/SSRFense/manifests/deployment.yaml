@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ssrfence
+spec:
+  selector:
+    matchLabels:
+      app: ssrfence
+  template:
+    metadata:
+      labels:
+        app: ssrfence
+    spec:
+      containers:
+      - name: ssrfence
+        image: umjoshua/ssrfence
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"

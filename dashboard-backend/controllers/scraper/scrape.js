@@ -36,10 +36,12 @@ const scraper = async (req, res) => {
         await channel.assertQueue('nuclei', { durable: false });
         await channel.assertQueue('xsstrike', { durable: false });
         await channel.assertQueue('openredirect', { durable: false });
+        await channel.assertQueue('ssrfence', { durable: false });
 
         await channel.bindQueue('nuclei', exchangeName, 'nuclei');
         await channel.bindQueue('xsstrike', exchangeName, 'xsstrike');
         await channel.bindQueue('openredirect', exchangeName, 'openredirectat');
+        await channel.bindQueue('ssrfence', exchangeName, 'ssrfence');
 
         for (const item of links) {
           channel.publish(exchangeName, 'nuclei', Buffer.from(JSON.stringify({ link: item, commitId: commitId })));
@@ -48,6 +50,7 @@ const scraper = async (req, res) => {
         }
         for (const item of images) {
           channel.publish(exchangeName, 'openredirect', Buffer.from(JSON.stringify({ link: item, commitId: commitId })));
+          channel.publish(exchangeName, 'ssrfence', Buffer.from(JSON.stringify({ link: item, commitId: commitId })));
         }
 
       } catch (error) {
