@@ -40,7 +40,7 @@ const scraper = async (req, res) => {
 
         await channel.bindQueue('nuclei', exchangeName, 'nuclei');
         await channel.bindQueue('xsstrike', exchangeName, 'xsstrike');
-        await channel.bindQueue('openredirect', exchangeName, 'openredirectat');
+        await channel.bindQueue('openredirect', exchangeName, 'openredirect');
         await channel.bindQueue('ssrfence', exchangeName, 'ssrfence');
 
         for (const item of links) {
